@@ -15,3 +15,14 @@ export const Platform = [
     description: "",
   },
 ];
+
+export const shopNavbar = [
+  {
+    name: "Home",
+    href: "/",
+  },
+  {
+    name: "Orders",
+    href: "/orders",
+  },
+];

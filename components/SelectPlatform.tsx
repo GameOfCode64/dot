@@ -11,7 +11,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useRouter } from "next/navigation";
-import { Platform } from "@/utils/data";
+import { Platform } from "@/utils/AllNavLinks";
 
 const SelectPlatform = () => {
   const [selectedPlatform, setSelectedPlatform] = useState("");
