@@ -13,7 +13,7 @@ const Navbar = () => {
       </div>
       <div className="flex items-center justify-normal space-x-3.5">
         {shopNavbar.map((nav, index) => (
-          <Link key={index} href={nav.href} className=" font-semibold">
+          <Link key={index} href={nav.href} className="font-semibold">
             {nav.name}
           </Link>
         ))}
