@@ -1,7 +1,9 @@
 "use client";
+
 import Image from "next/image";
-import { Button } from "../ui/button";
 import Loader from "@/components/Loader";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
 import React, { useEffect, useState } from "react";
 import { formatCurrency } from "@/utils/currencyFormate";
 import getAllProduct from "@/sanity/lib/querys/getallProducts";
@@ -15,8 +17,9 @@ interface productCard {
 }
 
 const ProductCard = () => {
-  const [products, setProducts] = useState<productCard[]>([]);
   const [loading, setLoading] = useState(false);
+  const [products, setProducts] = useState<productCard[]>([]);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchTreks = async () => {
@@ -35,7 +38,13 @@ const ProductCard = () => {
   return (
     <div className="w-full grid md:grid-cols-3 grid-cols-1 lg:grid-cols-4 gap-5">
       {products.map((item, index) => (
-        <div className="h-[500px] px-2 py-3" key={index}>
+        <div
+          className="h-[500px] px-2 py-3"
+          key={index}
+          onClick={() => {
+            router.push(`/shop/products/${item.slug}`);
+          }}
+        >
           <div className="w-full p-1 h-[350px] rounded-3xl bg-white cursor-pointer">
             <Image
               src={item.imageUrl}

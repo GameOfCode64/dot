@@ -1,8 +1,7 @@
 import { client } from "@/sanity/lib/client";
 
-async function getAllProduct() {
-  const query = `
-        *[_type == "product"]{
+export const getProductInfo = async (slug: string) => {
+  const query = `*[_type == "product" && slug.current == $slug][0]{
                 _id,
                 title,
                 description,
@@ -11,11 +10,10 @@ async function getAllProduct() {
                 "imageUrl": images[0].asset->url,
                 "additionalImageUrls": additionalImages[].asset->url,
                 "category": category->title
-        }
-    `;
+    }`;
 
-  const data = await client.fetch(query);
-  return data;
-}
+  const params = { slug };
 
-export default getAllProduct;
+  const product = await client.fetch(query, params);
+  return product;
+};
