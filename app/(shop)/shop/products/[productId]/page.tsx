@@ -21,16 +21,14 @@ interface ProductProps {
 
 const Page = async ({ params }: ProductsProps) => {
   const id = await (await params).productId;
-  const data: ProductProps = await getProductInfo(id);
+  // const data: ProductProps = await getProductInfo(id);
 
-  if (!data) {
-    return <Loader />;
-  }
+  // if (!data) {
+  //   return <Loader />;
+  // }
 
   return (
-    <div className="md:px-20 px-8 py-8">
-      <ProductInfo {...data} />
-    </div>
+    <div className="md:px-20 px-8 py-8">{/* <ProductInfo {...data} /> */}</div>
   );
 };
 

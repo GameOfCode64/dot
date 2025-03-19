@@ -1,57 +1,73 @@
-import { defineField, defineType } from "sanity";
+import { TrolleyIcon } from "@sanity/icons";
+import { defineField } from "sanity";
 
-export const products = defineType({
-  name: "product",
+export const productType = defineField({
+  name: "products",
   title: "Product",
   type: "document",
+  icon: TrolleyIcon,
   fields: [
     defineField({
-      name: "title",
-      title: "Title",
+      name: "name",
+      title: "Product Name",
       type: "string",
+      validation: (Rule) => Rule.required(),
     }),
+
     defineField({
       name: "slug",
       title: "Slug",
       type: "slug",
       options: {
-        source: "title",
+        source: "name",
         maxLength: 96,
+      },
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: "image",
+      title: "Product Image",
+      type: "image",
+      options: {
+        hotspot: true,
       },
     }),
     defineField({
       name: "description",
       title: "Description",
-      type: "text",
+      type: "string",
     }),
     defineField({
       name: "price",
       title: "Price",
       type: "number",
-    }),
-    defineField({
-      name: "images",
-      title: "Images",
-      type: "array",
-      of: [{ type: "image", options: { hotspot: true } }],
-      options: {
-        layout: "grid",
-      },
-    }),
-    defineField({
-      name: "additionalImages",
-      title: "Additional Images",
-      type: "array",
-      of: [{ type: "image", options: { hotspot: true } }],
-      options: {
-        layout: "grid",
-      },
+      validation: (Rule) => Rule.required().min(0),
     }),
     defineField({
       name: "category",
       title: "Category",
-      type: "reference",
-      to: [{ type: "category" }],
+      type: "array",
+      of: [{ type: "reference", to: { type: "category" } }],
+    }),
+    defineField({
+      name: "stock",
+      title: "Stock",
+      type: "number",
+      validation: (Rule) => Rule.required().min(0),
     }),
   ],
+  preview: {
+    select: {
+      title: "name",
+      price: "price",
+      media: "image",
+    },
+    prepare(select) {
+      return {
+        title: select.title,
+        subtitle: `$₹{select.price}`,
+        media: select.media,
+      };
+    },
+  },
 });
