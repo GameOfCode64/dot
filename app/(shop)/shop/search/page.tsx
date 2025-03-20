@@ -8,7 +8,7 @@ const Search = async ({
     query: string;
   };
 }) => {
-  const { query } = searchParams;
+  const { query } = await searchParams;
   const products = await searchProductByName(query);
   return (
     <div className="flex flex-col md:px-20 px-8 py-8">
