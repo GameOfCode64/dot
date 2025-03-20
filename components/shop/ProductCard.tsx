@@ -2,38 +2,20 @@
 
 import Image from "next/image";
 import Loader from "@/components/Loader";
+import { Products } from "@/sanity.types";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { formatCurrency } from "@/utils/currencyFormate";
-import getAllProduct from "@/sanity/lib/querys/getallProducts";
+import { getAllProducts } from "@/sanity/lib/querys/getallProducts";
+import { imageUrl } from "@/lib/imageUrlBuilder";
 
-interface productCard {
-  _id: string;
-  title: string;
-  price: number;
-  slug: string;
-  imageUrl: string;
+interface ProductPros {
+  products: Products[];
 }
 
-const ProductCard = () => {
-  const [loading, setLoading] = useState(false);
-  const [products, setProducts] = useState<productCard[]>([]);
+const ProductCard = ({ products }: ProductPros) => {
   const router = useRouter();
-
-  useEffect(() => {
-    const fetchTreks = async () => {
-      setLoading(true);
-      const data = await getAllProduct();
-      setProducts(data);
-      setLoading(false);
-    };
-    fetchTreks();
-  }, []);
-
-  if (loading) {
-    return <Loader />;
-  }
 
   return (
     <div className="w-full grid md:grid-cols-3 grid-cols-1 lg:grid-cols-4 gap-5">
@@ -47,7 +29,7 @@ const ProductCard = () => {
         >
           <div className="w-full p-1 h-[350px] rounded-3xl bg-white cursor-pointer">
             <Image
-              src={item.imageUrl}
+              src={item.image ? imageUrl(item.image).url() : ""}
               alt="product"
               className="w-full h-full object-center"
               width={350}
@@ -56,8 +38,10 @@ const ProductCard = () => {
           </div>
           <div className="flex flex-col gap-3 my-3">
             <div className="flex  items-center justify-between">
-              <p className="text-wrap font-semibold text-lg">{item.title}</p>
-              <p className="text-emerald-500">{formatCurrency(item.price)}</p>
+              <p className="text-wrap font-semibold text-lg">{item.name}</p>
+              <p className="text-emerald-500">
+                {formatCurrency(item.price || 999)}
+              </p>
             </div>
             <Button className="cursor-pointer">Add to Cart</Button>
           </div>

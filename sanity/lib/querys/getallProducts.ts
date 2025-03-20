@@ -1,21 +1,19 @@
-import { client } from "@/sanity/lib/client";
+import { defineQuery } from "next-sanity";
+import { sanityFetch } from "../live";
 
-async function getAllProduct() {
-  const query = `
-        *[_type == "product"]{
-                _id,
-                title,
-                description,
-                price,
-                "slug": slug.current,
-                "imageUrl": images[0].asset->url,
-                "additionalImageUrls": additionalImages[].asset->url,
-                "category": category->title
-        }
-    `;
+export const getAllProducts = async () => {
+  const ALL_PRODUCTS_QUERY = defineQuery(`
+    *[_type == "products"]  | order(_createdAt desc)
 
-  const data = await client.fetch(query);
-  return data;
-}
+    `);
 
-export default getAllProduct;
+  try {
+    const products = await sanityFetch({
+      query: ALL_PRODUCTS_QUERY,
+    });
+    return products.data || [];
+  } catch (error) {
+    console.error("Error fetching products", error);
+    return [];
+  }
+};

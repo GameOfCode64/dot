@@ -14,9 +14,11 @@ import {
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@clerk/nextjs";
+import { useSearch } from "@/hooks/useSearch";
 
 const Navbar = () => {
   const auth = useAuth();
+  const { onOpen } = useSearch();
 
   return (
     <div className="w-full h-[70px] px-8 bg-[#f0f1f5] flex items-center justify-between">
@@ -36,7 +38,7 @@ const Navbar = () => {
             {nav.name}
           </Link>
         ))}
-        <Search />
+        <Search onClick={onOpen} className="cursor-pointer" />
         <div className="relative">
           <span className="absolute w-[20px] h-[20px] flex items-center justify-center text-white top-[-10px] right-[-8px] rounded-full bg-red-500 fle">
             0
