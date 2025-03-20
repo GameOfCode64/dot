@@ -1,34 +1,48 @@
 import React from "react";
-
-import { getProductInfo } from "@/sanity/lib/querys/getProductInfo";
-import Loader from "@/components/Loader";
-import ProductInfo from "@/components/shop/ProductInfo";
-
+import Image from "next/image";
+import { notFound } from "next/navigation";
+import { imageUrl } from "@/lib/imageUrlBuilder";
+import { formatCurrency } from "@/utils/currencyFormate";
+import AddToBasketButton from "@/components/shop/AddToBasketButton";
+import { getProductBySlug } from "@/sanity/lib/querys/getProductBySlug";
 interface ProductsProps {
   params: Promise<{ productId: string }>;
 }
 
-interface ProductProps {
-  _id: string;
-  title: string;
-  description: string;
-  price: number;
-  slug: string;
-  imageUrl: string;
-  additionalImageUrls: string[];
-  category: string;
-}
-
 const Page = async ({ params }: ProductsProps) => {
-  const id = await (await params).productId;
-  // const data: ProductProps = await getProductInfo(id);
+  const { productId } = await params;
 
-  // if (!data) {
-  //   return <Loader />;
-  // }
+  const product = await getProductBySlug(productId);
+  if (!product) {
+    return notFound();
+  }
 
   return (
-    <div className="md:px-20 px-8 py-8">{/* <ProductInfo {...data} /> */}</div>
+    <div className="md:px-20 px-8 py-8">
+      <div className="grid md:grid-cols-2 grid-cols-1">
+        <div className="flex flex-col">
+          <div className="md:w-[500px] w-full md:h-[80dvh] h-[55dvh] p-1">
+            <Image
+              src={product.image ? imageUrl(product.image).url() : ""}
+              className="w-full h-full object-center"
+              alt="productImage"
+              width={1500}
+              height={1500}
+            />
+          </div>
+        </div>
+        <div className="flex flex-col py-12 md:pr-6">
+          <p className="font-bold text-3xl text-rose-500">{product.name}</p>
+          <p className="text-2xl text-emerald-500 font-semibold mt-4">
+            {formatCurrency(product.price || 999)}
+          </p>
+          <p className="text-[#333] mt-4 text-justify text-sm">
+            {product.description}
+          </p>
+          <AddToBasketButton product={product} />
+        </div>
+      </div>
+    </div>
   );
 };
 

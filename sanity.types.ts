@@ -201,6 +201,40 @@ export type Slug = {
 
 export type AllSanitySchemaTypes = SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityFileAsset | Geopoint | Orders | Category | Products | SanityImageCrop | SanityImageHotspot | SanityImageAsset | SanityAssetSourceData | SanityImageMetadata | Slug;
 export declare const internalGroqTypeReferenceTo: unique symbol;
+// Source: ./sanity/lib/querys/getProductBySlug.ts
+// Variable: PRODUCT_BY_SLUG_QUERY
+// Query: *[_type == "products" && slug.current == $slug] | order(name asc) [0]
+export type PRODUCT_BY_SLUG_QUERYResult = {
+  _id: string;
+  _type: "products";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  name?: string;
+  slug?: Slug;
+  image?: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  };
+  description?: string;
+  price?: number;
+  category?: Array<{
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    _key: string;
+    [internalGroqTypeReferenceTo]?: "category";
+  }>;
+  stock?: number;
+} | null;
+
 // Source: ./sanity/lib/querys/getallProducts.ts
 // Variable: ALL_PRODUCTS_QUERY
 // Query: *[_type == "products"]  | order(_createdAt desc)
@@ -273,6 +307,7 @@ export type SEARCH_PRODUCT_QUERYResult = Array<{
 import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
+    "\n    *[_type == \"products\" && slug.current == $slug] | order(name asc) [0]\n  ": PRODUCT_BY_SLUG_QUERYResult;
     "\n    *[_type == \"products\"]  | order(_createdAt desc)\n\n    ": ALL_PRODUCTS_QUERYResult;
     "\n        *[_type == \"products\" && name match $searchParam]  | order(_createdAt desc)\n        ": SEARCH_PRODUCT_QUERYResult;
   }

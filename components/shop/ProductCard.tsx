@@ -1,14 +1,12 @@
 "use client";
 
+import React from "react";
 import Image from "next/image";
-import Loader from "@/components/Loader";
 import { Products } from "@/sanity.types";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import React from "react";
-import { formatCurrency } from "@/utils/currencyFormate";
-import { getAllProducts } from "@/sanity/lib/querys/getallProducts";
 import { imageUrl } from "@/lib/imageUrlBuilder";
+import { formatCurrency } from "@/utils/currencyFormate";
 
 interface ProductPros {
   products: Products[];
@@ -24,7 +22,7 @@ const ProductCard = ({ products }: ProductPros) => {
           className="h-[500px] px-2 py-3"
           key={index}
           onClick={() => {
-            router.push(`/shop/products/${item.slug}`);
+            router.push(`/shop/products/${item.slug?.current}`);
           }}
         >
           <div className="w-full p-1 h-[350px] rounded-3xl bg-white cursor-pointer">
