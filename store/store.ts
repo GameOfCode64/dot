@@ -39,9 +39,26 @@ const useBasketStore = create<BasketState>()(
           }
         }),
       removeItem: (productId) =>
-        set((state) => ({
-          items: state.items.filter((item) => item.product._id !== productId),
-        })),
+        set((state) => {
+          const existingItem = state.items.find(
+            (item) => item.product._id === productId
+          );
+          if (existingItem && existingItem.quantity > 1) {
+            return {
+              items: state.items.map((item) =>
+                item.product._id === productId
+                  ? { ...item, quantity: item.quantity - 1 }
+                  : item
+              ),
+            };
+          } else {
+            return {
+              items: state.items.filter(
+                (item) => item.product._id !== productId
+              ),
+            };
+          }
+        }),
       clearBasket: () => set({ items: [] }),
       getTotalPrice: () =>
         get().items.reduce(

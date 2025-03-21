@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect } from "react";
 import useBasketStore from "@/store/store";
-import { useAuth, useUser } from "@clerk/nextjs";
+import { SignInButton, useAuth, useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
@@ -9,6 +9,11 @@ import { Button } from "@/components/ui/button";
 import { imageUrl } from "@/lib/imageUrlBuilder";
 import { formatCurrency } from "@/utils/currencyFormate";
 import Loader from "@/components/Loader";
+import { Minus, Plus } from "lucide-react";
+import {
+  createCheckoutSession,
+  Metadata,
+} from "@/action/shop/cretaetCheckoutSession";
 
 const BasketPage = () => {
   const { user } = useUser();
@@ -16,6 +21,7 @@ const BasketPage = () => {
   const { isSignedIn } = useAuth();
   const [isClient, setIsClient] = React.useState(false);
   const [isLoaded, setIsLoaded] = React.useState(false);
+  const { addItem, removeItem } = useBasketStore();
   const groupedItems = useBasketStore((state) => state.getGroupedItems());
 
   useEffect(() => {
@@ -25,10 +31,28 @@ const BasketPage = () => {
   if (!isClient) {
     return <Loader />;
   }
+  const handleCheckout = async () => {
+    if (!isSignedIn) return;
+    setIsLoaded(true);
+    try {
+      const metadata: Metadata = {
+        orderNumber: crypto.randomUUID(),
+        customerName: user?.fullName ?? "Unknown",
+        customerEmail: user?.emailAddresses[0].emailAddress ?? "Unknown",
+        clerkUserId: user!.id,
+      };
 
-  //   if (!isSignedIn) {
-  //     router.push("/auth/sign-in");
-  //   }
+      const stripeCheckoutSessionUrl = await createCheckoutSession(
+        groupedItems,
+        metadata
+      );
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoaded(false);
+    }
+  };
+
   if (groupedItems.length === 0) {
     return (
       <div className="md:px-20 px-8 my-8 flex flex-col items-center justify-center h-screen">
@@ -69,20 +93,21 @@ const BasketPage = () => {
               />
               <div>
                 <h2 className="text-lg font-semibold">{item.product?.name}</h2>
-                <p className="text-gray-500">Quantity: {item.quantity}</p>
+                <p className="text-gray-500">
+                  Price: {formatCurrency(item.product.price || 0)}
+                </p>
               </div>
             </div>
             <div className="flex items-center space-x-4">
-              <p className="text-lg font-semibold">
-                {formatCurrency(item.product.price || 999)}
-              </p>
               <Button
                 variant="outline"
-                onClick={() =>
-                  useBasketStore.getState().removeItem(item.product._id)
-                }
+                onClick={() => removeItem(item.product._id)}
               >
-                Remove
+                <Minus />
+              </Button>
+              <p className="text-lg font-semibold">{item.quantity}</p>
+              <Button variant="outline" onClick={() => addItem(item.product)}>
+                <Plus />
               </Button>
             </div>
           </div>
@@ -98,12 +123,17 @@ const BasketPage = () => {
               )
             )}
           </h2>
-          <Button
-            className="cursor-pointer"
-            onClick={() => router.push("/checkout")}
-          >
-            Proceed to Checkout
-          </Button>
+          {isSignedIn ? (
+            <Button
+              disabled={isLoaded}
+              className="cursor-pointer"
+              onClick={handleCheckout}
+            >
+              {isLoaded ? "...Processing" : "Proceed to Checkout"}
+            </Button>
+          ) : (
+            <SignInButton />
+          )}
         </div>
       </div>
     </div>

@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { imageUrl } from "@/lib/imageUrlBuilder";
 import { formatCurrency } from "@/utils/currencyFormate";
+import Link from "next/link";
 
 interface ProductPros {
   products: Products[];
@@ -41,7 +42,9 @@ const ProductCard = ({ products }: ProductPros) => {
                 {formatCurrency(item.price || 999)}
               </p>
             </div>
-            <Button className="cursor-pointer">Add to Cart</Button>
+            <Link href={`/shop/products/${item.slug?.current}`}>
+              <Button className="cursor-pointer w-full">Add to Cart</Button>
+            </Link>
           </div>
         </div>
       ))}

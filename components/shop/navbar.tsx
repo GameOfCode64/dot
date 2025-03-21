@@ -47,7 +47,9 @@ const Navbar = () => {
           <span className="absolute w-[20px] h-[20px] flex items-center justify-center text-white top-[-10px] right-[-8px] rounded-full bg-red-500 fle">
             {ItemCount}
           </span>
-          <ShoppingBag />
+          <Link href="/shop/basket">
+            <ShoppingBag className="cursor-pointer" />
+          </Link>
         </div>
         {/* Mobil Menu */}
         <Sheet>
