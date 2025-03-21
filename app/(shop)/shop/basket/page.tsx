@@ -17,7 +17,6 @@ import {
 
 const BasketPage = () => {
   const { user } = useUser();
-  const router = useRouter();
   const { isSignedIn } = useAuth();
   const [isClient, setIsClient] = React.useState(false);
   const [isLoaded, setIsLoaded] = React.useState(false);
@@ -40,12 +39,16 @@ const BasketPage = () => {
         customerName: user?.fullName ?? "Unknown",
         customerEmail: user?.emailAddresses[0].emailAddress ?? "Unknown",
         clerkUserId: user!.id,
+        reserver_name: "",
+        phone_name: "",
+        address: "",
       };
 
-      const stripeCheckoutSessionUrl = await createCheckoutSession(
-        groupedItems,
-        metadata
-      );
+      const checkoutUrl = await createCheckoutSession(groupedItems, metadata);
+
+      if (checkoutUrl) {
+        window.location.href = checkoutUrl;
+      }
     } catch (error) {
       console.error(error);
     } finally {
