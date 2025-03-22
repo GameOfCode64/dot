@@ -46,9 +46,7 @@ export async function createCheckoutSession(
       customer_email: !customerId ? metadata.customerEmail : undefined,
       metadata,
       allow_promotion_codes: true,
-      success_url:
-        `${`https://${process.env.VERCEL_URL}`}` ||
-        `${process.env.NEXT_PUBLIC_BASE_URL}/shop/success?session_id={CHECKOUT_SESSION_ID}`,
+      success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/shop/success?session_id={CHECKOUT_SESSION_ID}&orderNumber=${metadata.orderNumber}`,
       cancel_url:
         `${`https://${process.env.VERCEL_URL}`}` ||
         `${process.env.NEXT_PUBLIC_BASE_URL}/basket`,
