@@ -2,7 +2,6 @@
 import React, { useEffect } from "react";
 import useBasketStore from "@/store/store";
 import { SignInButton, useAuth, useUser } from "@clerk/nextjs";
-import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";

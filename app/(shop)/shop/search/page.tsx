@@ -1,14 +1,14 @@
 import ProductCard from "@/components/shop/ProductCard";
 import { searchProductByName } from "@/sanity/lib/querys/searchProductByName";
 
-interface SearchProps {
-  searchParams: {
+const page = async ({
+  searchParams,
+}: {
+  searchParams: Promise<{
     query: string;
-  };
-}
-
-const page = async ({ searchParams }: SearchProps) => {
-  const { query } = searchParams;
+  }>;
+}) => {
+  const query = (await searchParams).query;
   const products = await searchProductByName(query);
   return (
     <div className="flex flex-col md:px-20 px-8 py-8">

@@ -1,5 +1,5 @@
 "use client";
-import React, { use, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Products } from "@/sanity.types";
 import useBasketStore from "@/store/store";
 import { Button } from "../ui/button";

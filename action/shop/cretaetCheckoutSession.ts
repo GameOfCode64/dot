@@ -52,7 +52,7 @@ export async function createCheckoutSession(
         `${process.env.NEXT_PUBLIC_BASE_URL}/basket`,
       line_items: item.map((item) => ({
         price_data: {
-          currency: "inr",
+          currency: "usd",
           unit_amount: Math.round(item.product.price! * 100),
           product_data: {
             name: item.product.name || "Unnamed Product",
