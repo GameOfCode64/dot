@@ -6,11 +6,11 @@ import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 
 export async function POST(req: NextRequest) {
+  console.log("HIT Webhook");
   const body = await req.text();
   const headersList = await headers();
   const sig = headersList.get("stripe-signature");
 
-  console.log("HI Webhook");
   if (!sig) {
     return NextResponse.json({ error: "No signature" }, { status: 400 });
   }
