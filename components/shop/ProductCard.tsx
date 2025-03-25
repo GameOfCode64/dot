@@ -37,7 +37,7 @@ const ProductCard = ({ products }: ProductPros) => {
           </div>
           <div className="flex flex-col gap-3 my-3">
             <div className="flex  items-center justify-between">
-              <p className="text-wrap font-semibold text-lg">{item.name}</p>
+              <p className="text-nowrap font-semibold text-lg">{item.name}</p>
               <p className="text-emerald-500">
                 {formatCurrency(item.price || 999)}
               </p>
