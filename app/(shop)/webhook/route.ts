@@ -1,4 +1,4 @@
-import { Metadata } from "@/action/shop/cretaetCheckoutSession";
+import { Metadata } from "@/action/shop/createCheckoutSession";
 import stripe from "@/lib/stripe";
 import { backendClient } from "@/sanity/lib/backendClient";
 import { headers } from "next/headers";

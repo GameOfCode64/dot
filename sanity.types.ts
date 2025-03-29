@@ -199,26 +199,57 @@ export type Slug = {
   source?: string;
 };
 
-export type AllSanitySchemaTypes =
-  | SanityImagePaletteSwatch
-  | SanityImagePalette
-  | SanityImageDimensions
-  | SanityFileAsset
-  | Geopoint
-  | Orders
-  | Category
-  | Products
-  | SanityImageCrop
-  | SanityImageHotspot
-  | SanityImageAsset
-  | SanityAssetSourceData
-  | SanityImageMetadata
-  | Slug;
+export type AllSanitySchemaTypes = SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityFileAsset | Geopoint | Orders | Category | Products | SanityImageCrop | SanityImageHotspot | SanityImageAsset | SanityAssetSourceData | SanityImageMetadata | Slug;
 export declare const internalGroqTypeReferenceTo: unique symbol;
+// Source: ./sanity/lib/querys/getCategory.ts
+// Variable: ALL_CATEGORY_QUERY
+// Query: *[_type == "category"]  | order(_createdAt desc)
+export type ALL_CATEGORY_QUERYResult = Array<{
+  _id: string;
+  _type: "category";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title?: string;
+}>;
+
+// Source: ./sanity/lib/querys/getCategoryBySlug.ts
+// Variable: ALL_CATEGORY_BY_SLUG_QUERY
+// Query: *[_type == "products" && references(*[_type == "category" && slug.current == $slug])] | order(_createdAt desc)
+export type ALL_CATEGORY_BY_SLUG_QUERYResult = Array<{
+  _id: string;
+  _type: "products";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  name?: string;
+  slug?: Slug;
+  image?: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  };
+  description?: string;
+  price?: number;
+  category?: Array<{
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    _key: string;
+    [internalGroqTypeReferenceTo]?: "category";
+  }>;
+  stock?: number;
+}>;
+
 // Source: ./sanity/lib/querys/getMyOrders.ts
 // Variable: MY_ORDERS_QUERY
 // Query: *[_type == "orders" && clerkUserId == $userId] | order(orderDate desc) {        ...,        products[]{        ...,        product ->        }    }
-
 export type MY_ORDERS_QUERYResult = Array<{
   _id: string;
   _type: "orders";
@@ -354,9 +385,11 @@ export type SEARCH_PRODUCT_QUERYResult = Array<{
 import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
-    '\n    *[_type == "orders" && clerkUserId == $userId] | order(orderDate desc) {\n        ...,\n        products[]{\n        ...,\n        product ->\n        }\n    }\n    ': MY_ORDERS_QUERYResult;
-    '\n    *[_type == "products" && slug.current == $slug] | order(name asc) [0]\n  ': PRODUCT_BY_SLUG_QUERYResult;
-    '\n    *[_type == "products"]  | order(_createdAt desc)\n\n    ': ALL_PRODUCTS_QUERYResult;
-    '\n        *[_type == "products" && name match $searchParam]  | order(_createdAt desc)\n        ': SEARCH_PRODUCT_QUERYResult;
+    "\n    *[_type == \"category\"]  | order(_createdAt desc)\n\n    ": ALL_CATEGORY_QUERYResult;
+    "\n        *[_type == \"products\" && references(*[_type == \"category\" && slug.current == $slug])] | order(_createdAt desc)\n    ": ALL_CATEGORY_BY_SLUG_QUERYResult;
+    "\n    *[_type == \"orders\" && clerkUserId == $userId] | order(orderDate desc) {\n        ...,\n        products[]{\n        ...,\n        product ->\n        }\n    }\n    ": MY_ORDERS_QUERYResult;
+    "\n    *[_type == \"products\" && slug.current == $slug] | order(name asc) [0]\n  ": PRODUCT_BY_SLUG_QUERYResult;
+    "\n    *[_type == \"products\"]  | order(_createdAt desc)\n\n    ": ALL_PRODUCTS_QUERYResult;
+    "\n        *[_type == \"products\" && name match $searchParam]  | order(_createdAt desc)\n        ": SEARCH_PRODUCT_QUERYResult;
   }
 }

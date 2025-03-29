@@ -9,9 +9,6 @@ export type Metadata = {
   customerName: string;
   customerEmail: string;
   clerkUserId: string;
-  reserver_name: string;
-  phone_name: string;
-  address: string;
 };
 
 export type groupBasketItem = {

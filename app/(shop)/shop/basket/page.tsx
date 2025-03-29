@@ -12,7 +12,8 @@ import { Minus, Plus } from "lucide-react";
 import {
   createCheckoutSession,
   Metadata,
-} from "@/action/shop/cretaetCheckoutSession";
+} from "@/action/shop/createCheckoutSession";
+import { usePayment } from "@/hooks/usePayment";
 
 const BasketPage = () => {
   const { user } = useUser();
@@ -21,6 +22,7 @@ const BasketPage = () => {
   const [isLoaded, setIsLoaded] = React.useState(false);
   const { addItem, removeItem } = useBasketStore();
   const groupedItems = useBasketStore((state) => state.getGroupedItems());
+  const { onOpen } = usePayment();
 
   useEffect(() => {
     setIsClient(true);
@@ -38,9 +40,6 @@ const BasketPage = () => {
         customerName: user?.fullName ?? "Unknown",
         customerEmail: user?.emailAddresses[0].emailAddress ?? "Unknown",
         clerkUserId: user!.id,
-        reserver_name: "",
-        phone_name: "",
-        address: "",
       };
 
       const checkoutUrl = await createCheckoutSession(groupedItems, metadata);

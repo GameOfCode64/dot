@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { Products } from "@/sanity.types";
 import useBasketStore from "@/store/store";
 import { Button } from "../ui/button";
-import { Minus, Plus } from "lucide-react";
+import { Minus, Plus, ShoppingBag } from "lucide-react";
 
 interface AddToBasketProps {
   product: Products;
@@ -25,10 +25,10 @@ const AddToBasketButton = (product: AddToBasketProps) => {
     <div className="my-4 w-full">
       {ItemCount <= 0 ? (
         <Button
-          className="bg-red-500 hover:bg-red-600 cursor-pointer text-white px-4 py-2 rounded-md w-full sm:w-auto"
+          className="bg-red-500  hover:bg-red-600 cursor-pointer text-white px-4 py-2 rounded-md w-full"
           onClick={() => addItem(product.product)}
         >
-          Add to Basket
+          <ShoppingBag /> Add to Basket
         </Button>
       ) : (
         <div className="flex items-center justify-between w-full sm:w-auto">

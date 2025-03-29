@@ -5,6 +5,7 @@ import { imageUrl } from "@/lib/imageUrlBuilder";
 import { formatCurrency } from "@/utils/currencyFormate";
 import AddToBasketButton from "@/components/shop/AddToBasketButton";
 import { getProductBySlug } from "@/sanity/lib/querys/getProductBySlug";
+import BayNowButton from "@/components/shop/BayNowButton";
 interface ProductsProps {
   params: Promise<{ productId: string }>;
 }
@@ -39,7 +40,10 @@ const Page = async ({ params }: ProductsProps) => {
           <p className="text-[#333] mt-4 text-justify text-sm">
             {product.description}
           </p>
-          <AddToBasketButton product={product} />
+          <div className="flex items-center justify-normal gap-4 w-full mt-5">
+            <AddToBasketButton product={product} />
+            <BayNowButton product={product} />
+          </div>
         </div>
       </div>
     </div>
